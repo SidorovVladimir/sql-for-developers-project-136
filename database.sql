@@ -53,3 +53,22 @@ CREATE TABLE course_module (
     FOREIGN KEY (course_id) REFERENCES courses(id),
     FOREIGN KEY (module_id) REFERENCES modules(id)
 );
+
+CREATE TABLE users (
+  id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  first_name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  url_group VARCHAR(255) NOT NULL,
+  role VARCHAR(50) NOT NULL,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
+);
+
+CREATE TABLE teaching_groups (
+  id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  slug VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP,
+  user_id REFERENCES users(id) NOT NULL
+);
