@@ -53,14 +53,14 @@ CREATE TABLE course_module (
     FOREIGN KEY (course_id) REFERENCES courses(id),
     FOREIGN KEY (module_id) REFERENCES modules(id)
 );
-
+CREATE TYPE user_role AS ENUM ('Студент', 'Учитель', 'Админ');
 CREATE TABLE users (
   id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   first_name VARCHAR(255) NOT NULL,
   email VARCHAR(255) UNIQUE NOT NULL,
   password_hash VARCHAR(255) NOT NULL,
   url_group VARCHAR(255) NOT NULL,
-  role VARCHAR(50) NOT NULL,
+  role user_role,
   created_at TIMESTAMP,
   updated_at TIMESTAMP
 );
@@ -111,6 +111,43 @@ CREATE TABLE sertificates (
   program_id INT REFERENCES programs(id) NOT NULL,
   url VARCHAR(255) NOT NULL,
   relese TIMESTAMP,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
+);
+
+CREATE TABLE quizzes (
+  id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  lesson_id INT REFERENCES lessons(id) NOT NULL,
+  title VARCHAR(255) UNIQUE NOT NULL,
+  content JSONB,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
+);
+
+CREATE TABLE exercises (
+  id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  lesson_id INT REFERENCES lessons(id) NOT NULL,
+  title VARCHAR(255) UNIQUE NOT NULL,
+  url VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
+);
+
+CREATE TABLE discussions (
+  id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  lesson_id INT REFERENCES lessons(id) NOT NULL,
+  user_id INT REFERENCES users(id) NOT NULL,
+  text JSONB,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
+);
+CREATE TYPE status_blog AS ENUM ('created', 'in moderation', 'published', 'archived');
+CREATE TABLE blog (
+  id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  user_id INT REFERENCES users(id) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  text text NOT NULL,
+  status status_blog,
   created_at TIMESTAMP,
   updated_at TIMESTAMP
 );
