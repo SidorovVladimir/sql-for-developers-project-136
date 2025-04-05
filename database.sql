@@ -70,5 +70,47 @@ CREATE TABLE teaching_groups (
   slug VARCHAR(255) NOT NULL,
   created_at TIMESTAMP,
   updated_at TIMESTAMP,
-  user_id REFERENCES users(id) NOT NULL
+  user_id INT REFERENCES users(id) NOT NULL
+);
+
+CREATE TYPE status AS ENUM ('active', 'pending', 'cancelled', 'completed');
+CREATE TABLE enrollments (
+  id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  user_id INT REFERENCES users(id) NOT NULL,
+  program_id INT REFERENCES programs(id) NOT NULL,
+  status status,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
+);
+
+CREATE TYPE status_payments AS ENUM ('pending', 'paid', 'failed', 'refunded');
+
+CREATE TABLE payments (
+  id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  enrollment_id INT REFERENCES enrollments(id) NOT NULL,
+  amount NUMERIC NOT NULL,
+  status status_payments,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
+);
+
+CREATE TABLE program_completions (
+   id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+   user_id INT REFERENCES users(id) NOT NULL,
+   program_id INT REFERENCES programs(id) NOT NULL,
+   status status,
+   begin TIMESTAMP,
+   end TIMESTAMP,
+   created_at TIMESTAMP,
+   updated_at TIMESTAMP
+);
+
+CREATE TABLE sertificates (
+  id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  user_id INT REFERENCES users(id) NOT NULL,
+  program_id INT REFERENCES programs(id) NOT NULL,
+  url VARCHAR(255) NOT NULL,
+  relese TIMESTAMP,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
 );
